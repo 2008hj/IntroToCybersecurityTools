@@ -6,6 +6,9 @@
 .Spotlight-V100
 .Trashes
 .*
+# Track GitHub Actions and course reviewer configuration.
+!.github/
+!.github/**
 .codegraph
 # Windows
 Thumbs.db

@@ -2,6 +2,8 @@
 
 本仓库用于发布和提交学科综合讲座实验作业。请先阅读本文档，再同步题目、完成作业并发起 Pull Request（以下简称 PR）。
 
+第一次作业见 [Lab1：完成 TypingClub 前 202 关](homework/Lab1/Lab1.md)，截止时间为 **2026 年 10 月 16 日 24:00（北京时间）**。必须保留作业模板全部内容，按题目要求填写信息并提交两张截图。
+
 > **最重要的原则：学生只能修改自己“学号姓名”文件夹内的内容，不能修改仓库中的其他任何位置。**
 
 ## 1. 仓库目录结构
@@ -29,7 +31,7 @@ repo/
 fork 并 clone 仓库后，绑定老师的仓库地址，以便后续同步新作业：
 
 ```bash
-git remote add upstream https://github.com/LiuXiYing/IntroToIntegratedSecurityPractice.git
+git remote add upstream https://github.com/LiuXiYing/IntroToCybersecurityTools.git
 ```
 
 运行以下命令检查配置：
@@ -43,8 +45,8 @@ git remote -v
 ```text
 origin    https://github.com/你的账号/仓库名.git (fetch)
 origin    https://github.com/你的账号/仓库名.git (push)
-upstream  https://github.com/LiuXiYing/IntroToIntegratedSecurityPractice.git (fetch)
-upstream  https://github.com/LiuXiYing/IntroToIntegratedSecurityPractice.git (push)
+upstream  https://github.com/LiuXiYing/IntroToCybersecurityTools.git (fetch)
+upstream  https://github.com/LiuXiYing/IntroToCybersecurityTools.git (push)
 ```
 
 ### 2.2 每次提交作业
@@ -271,8 +273,8 @@ PR 发出后如果发现问题，直接在本地修改并再次 `push`，原 PR 
 
 | 超时情况 | 处理方式 |
 | --- | --- |
-| 最后一次推送时间比截止时间晚、不满 7 天 | 自动在 Conversation 中说明超时，暂不合并，但不关闭 PR，留待处理特殊情况 |
-| 最后一次推送时间比截止时间晚 7 天及以上 | 自动关闭 PR，无需继续检查作业正确性和规范性 |
+| 最后一次推送时间比截止时间晚、不满 7 天 | 内容审核照常进行，在 Conversation 中同时说明内容问题与超时，暂不合并、不关闭 PR |
+| 最后一次推送时间比截止时间晚 7 天及以上 | 内容审核后，最终结果为 `FAIL` 时自动关闭 PR；需要人工处理或服务异常时不关闭 |
 
 ### 4.4 超时未满 7 天的自动提示
 
@@ -284,7 +286,7 @@ PR 发出后如果发现问题，直接在本地修改并再次 `push`，原 PR 
 此 PR 已超时。
 
 - **作业截止时间**：YYYY-MM-DD
-- **PR 创建时间**：YYYY-MM-DD
+- **最后一次推送时间**：YYYY-MM-DD
 - **超时天数**：X 天
 
 超过截止时间，暂不予合并。如有特殊情况，请联系老师说明。
@@ -292,7 +294,7 @@ PR 发出后如果发现问题，直接在本地修改并再次 `push`，原 PR 
 
 ## 5. PR 自动检查与合并流程
 
-本仓库使用固定版本的共享审核器 **Course PR Reviewer**。GitHub Actions 负责触发检查、账号映射、确定性规则、评论、合并和超期关闭；GLM 与 Gemini 共同审核文本和图片。两个模型意见不一致时最多重新审核三轮，仍不一致则转交人工；PaddleOCR 已停用。学生不需要手动启动检查。
+本仓库使用固定版本的共享审核器 **Course PR Reviewer 0.11.0**。GitHub Actions 负责触发检查、账号映射、确定性规则、评论、合并和超期关闭；GLM 与 Gemini 共同审核文本和图片。两个模型意见不一致时最多审核三轮，达到上限仍有分歧时，该 AI 阶段按共享审核器规则视为通过，其他检查仍须全部通过；结果不确定或服务异常时暂停合并。PaddleOCR 已停用。学生不需要手动启动检查。
 
 ### 5.1 自动检查的触发
 
@@ -305,14 +307,14 @@ PR 发出后如果发现问题，直接在本地修改并再次 `push`，原 PR 
 系统按照以下顺序处理 PR：
 
 1. 读取 PR 的标题、作者、当前 head SHA 及其推送时间和全部变更文件。
-2. 根据第 4 节检查截止时间：超时未满 7 天时发布提示并暂停合并；超时满 7 天时自动关闭 PR。
-3. 检查 PR 标题是否符合 `[学号姓名]LabX作业提交` 格式。
-4. 根据 `.github/students.yml` 确认 GitHub 账号对应的学号和姓名，再检查是否只修改了本人的“学号姓名”文件夹。
-5. 检查学生文件夹和 `LabX` 文件夹的名称及大小写。
+2. 根据 `.github/students.yml` 确认 GitHub 账号对应的学号和姓名。
+3. 检查 PR 标题是否符合 `[学号姓名]LabX作业提交` 格式，且与登记身份一致。
+4. 确认作业已配置并启用；未发布的作业不能通过审核。
+5. 检查是否只修改了本人本次作业目录内的文件，并核对学生文件夹和 `LabX` 文件夹的名称及大小写。
 6. 读取 `.github/course-review.yml`，核对截止时间、文件数量、文件名和审核点。
-7. 使用 GLM 与 Gemini 双模型检查文本内容和作业截图；两者都通过才自动通过，两者都拒绝则说明原因，临时只有一个模型可用时采用可用模型的结果并在评论中标记降级状态。
+7. 使用 GLM 与 Gemini 双模型检查文本内容和作业截图；双方意见一致时采用一致结论，分歧时按本节开头的三轮规则处理；临时只有一个模型可用时采用可用模型的结果并在评论中标记降级状态。
 8. 检查文件格式、文件扩展名与实际内容是否匹配，并检查是否包含试图影响审查的 AI Prompt。
-9. 每次审核在 Conversation 中发布新的审核评论；未通过或需要人工处理时，同时展示修改建议和带编号的原始审核结果，检查未通过时阻止合并。
+9. 按第 4 节附加截止时间判定，不因超时跳过内容审核；每次在 Conversation 中发布新的审核评论，未通过或需要人工处理时展示修改建议和带编号的原始审核结果，并阻止合并。超时满 7 天且最终结果为 `FAIL` 时关闭 PR。
 10. 只有当前 head SHA 的全部检查明确返回 `PASS` 时才自动合并；提交变化后旧审核结果自动失效。
 
 标题格式或作业编号问题由程序直接生成修改建议，不依赖 AI 服务。例如将 `Lab2` 写成 `lab2` 时，会明确指出大小写错误，并给出可复制的完整正确标题；缺少编号、作业未配置和未启用也会分别提示。

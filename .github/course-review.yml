@@ -1,0 +1,93 @@
+version: 1
+
+course:
+  name: 学科综合讲座
+  timezone: Asia/Shanghai
+  title_template: "[{student_id}{student_name}]{assignment_id}作业提交"
+  submission_path_template: "{student_id}{student_name}/{assignment_id}"
+  merge_method: merge
+
+features:
+  auto_merge: true
+  comment_review: true
+  close_late_pr: true
+  ai_review: true
+  ai_feedback: true
+  ocr_review: false
+  vision_review: true
+  metrics: true
+
+defaults:
+  min_nonempty_lines: 10
+  allow_extra_files: false
+  late_close_after_days: 7
+
+ai:
+  providers:
+    - provider: glm
+      model: glm-4.7-flash
+    - provider: gemini
+      model: gemini-3.5-flash-lite
+  consensus_rounds: 3
+  min_confidence: 0.8
+  timeout_seconds: 60
+  max_attempts: 5
+  max_file_bytes: 200000
+  max_total_bytes: 500000
+  max_output_tokens: 2048
+
+feedback:
+  timeout_seconds: 20
+  max_input_bytes: 100000
+  max_output_tokens: 2048
+
+ocr:
+  detection_model: PP-OCRv6_small_det
+  recognition_model: PP-OCRv6_small_rec
+  min_line_confidence: 0.65
+  max_text_chars: 20000
+
+vision:
+  providers:
+    - provider: glm
+      model: glm-4.1v-thinking-flash
+    - provider: gemini
+      model: gemini-3.5-flash-lite
+  consensus_rounds: 3
+  min_confidence: 0.85
+  fail_confidence: 0.9
+  timeout_seconds: 90
+  max_attempts: 5
+  max_images: 6
+  max_image_bytes: 5000000
+  max_total_bytes: 12000000
+  max_pixels: 25000000
+  max_side: 4096
+  max_output_tokens: 4096
+
+# 发布新作业时在这里追加 Lab2、Lab3 等配置。
+# required_files 为相对学生作业目录的精确文件名；vision_files 支持 fnmatch 通配符。
+assignments:
+  Lab1:
+    enabled: true
+    deadline: "2026-10-17T00:00:00+08:00"
+    min_nonempty_lines: 10
+    allow_extra_files: false
+    report_template: homework/Lab1/Lab1.md
+    required_files:
+      - Lab1.md
+      - imgs/typingclub_calendar.png
+      - imgs/typingclub_202_completed.png
+    vision_files:
+      - imgs/typingclub_calendar.png
+      - imgs/typingclub_202_completed.png
+    review_points:
+      - Lab1.md 必须完整保留老师发布的模板，只能替换基本信息表第二列中的填写提示，不得删除、改写或调整其他标题、说明、表格行、图片引用和小节。
+      - 基本信息表中的姓名和 10 位学号必须全部填写，不能留空或保留填写提示，且必须与本次 PR 作者登记的身份一致。
+      - 本次不要求填写 GitHub 账号或 TypingClub 用户名，也不要求另外撰写练习心得。
+    vision_review_points:
+      - typingclub_calendar.png 必须是 TypingClub 主页进入统计数据后向下滚动看到的练习日程表区域，清晰显示“练习日程表”标题、累计练习时间及统计范围、按月份排列的日历方格和练习记录；不要求该图显示顶部导航栏、地址栏或账号名称。
+      - typingclub_202_completed.png 必须是 TypingClub 的关卡选择页面，清晰显示第 202 关的完整关卡卡片、编号 202 及至少一颗已获得的星星，并保留周围页面区域；只有编号、解锁状态或未点亮的星星不算完成。不要求重新练习，也不要求提交本关结束后的成绩页面。
+      - 两张截图必须来自本人同一 TypingClub 账号；仅在两张图均显示账号名称时检查是否相互矛盾。截图未显示账号名称不构成拒绝理由，不要求账号名称与学生姓名相同，也不要求在 Lab1.md 中填写账号名称。
+      - 不设置累计练习时长、练习天数、连续练习、速度、准确率或满星门槛；日历的月份、年份、颜色和练习时间以学生实际记录为准，不要求与教师示例一致。第 202 关有已获得的星星即可，不要求第 200、201 关或全部 202 个关卡同时出现在截图中。
+      - 截图必须由电脑截图功能生成，文字、关卡编号和完成状态清晰可读；出现手机拍摄造成的反光、摩尔纹、明显倾斜或关键文字无法辨认时判为不合格。

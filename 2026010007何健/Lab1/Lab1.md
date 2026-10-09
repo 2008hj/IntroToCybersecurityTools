@@ -20,8 +20,8 @@
 
 | 项目 | 内容 |
 | --- | --- |
-| 姓名 | （何健） |
-| 学号 | （2026010007） |
+| 姓名 | 何健 |
+| 学号 | 2026010007 |
 
 ---
 
@@ -54,7 +54,7 @@
 
 截图必须保存为 `imgs/typingclub_calendar.png`。将截图放入指定目录后，下面应能正常显示图片：
 
-![TypingClub 练习日程表](imgs/typingclub_calendar.png)!
+![TypingClub 练习日程表](imgs/typingclub_calendar.png)
 
 ---
 
